@@ -8,7 +8,8 @@ import java.util.stream.Collectors;
 public class PosMachine {
     public String printReceipt(List<String> barcodes) {
         ArrayList<ProductInfo> itemsInformation = processBarcodes(barcodes);
-        return generateReceipt(itemsInformation);
+        Receipt receipt=new Receipt(itemsInformation);
+        return receipt.generateReceipt();
     }
 
     private ArrayList<ProductInfo> processBarcodes(List<String> barcodes) {
@@ -24,10 +25,6 @@ public class PosMachine {
         return new ProductInfo(item.getBarcode(), item.getName(), item.getPrice(), 0, 0);
     }
 
-    private int calculateTotal(ArrayList<ProductInfo> itemsInformation) {
-        return itemsInformation.stream().mapToInt(ProductInfo::getSubtotal).sum();
-    }
-
     private ArrayList<ProductInfo> findQuantityOfEachItem(List<String> barcodes, ArrayList<ProductInfo> itemsInformation) {
         itemsInformation.forEach(itemInfo -> {
             itemInfo.setQuantity(Collections.frequency(barcodes, itemInfo.getBarcode()));
@@ -35,15 +32,4 @@ public class PosMachine {
         return itemsInformation;
     }
 
-    private String generateReceipt(ArrayList<ProductInfo> itemsInformation) {
-        int total = calculateTotal(itemsInformation);
-        String receipt = "***<store earning no money>Receipt***\n";
-        for (ProductInfo itemInformation : itemsInformation) {
-            receipt += String.format("Name: %s, Quantity: %d, Unit price: %d (yuan), Subtotal: %d (yuan)\n", itemInformation.getName(), itemInformation.getQuantity(), itemInformation.getUnitPrice(), itemInformation.getSubtotal());
-        }
-        receipt += "----------------------\n";
-        receipt += String.format("Total: %d (yuan)\n", total);
-        receipt += "**********************";
-        return receipt;
-    }
 }
