@@ -4,21 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Receipt {
-    private List<ProductInfo> itemsInformation;
-    private int total;
+    private final List<ProductInfo> productInfos;
+    private final String FIRSTLINE="***<store earning no money>Receipt***\n";
+    private final String HORIZONTAL="----------------------\n";
+    private final String ENDLINE = "**********************";
+    private final int total;
 
-    public Receipt(List<ProductInfo> itemsInformation) {
-        this.itemsInformation = itemsInformation;
-        total=itemsInformation.stream().mapToInt(ProductInfo::getSubtotal).sum();
+    public Receipt(List<ProductInfo> productInfos) {
+        this.productInfos = productInfos;
+        total=productInfos.stream().mapToInt(ProductInfo::getSubtotal).sum();
     }
     public  String generateReceipt() {
-        String receipt = "***<store earning no money>Receipt***\n";
-        for (ProductInfo itemInformation : this.itemsInformation) {
-            receipt += String.format("Name: %s, Quantity: %d, Unit price: %d (yuan), Subtotal: %d (yuan)\n", itemInformation.getName(), itemInformation.getQuantity(), itemInformation.getUnitPrice(), itemInformation.getSubtotal());
+        String receipt = FIRSTLINE;
+        for (ProductInfo productInfo : this.productInfos) {
+            receipt += String.format("Name: %s, Quantity: %d, Unit price: %d (yuan), Subtotal: %d (yuan)\n", productInfo.getName(), productInfo.getQuantity(), productInfo.getUnitPrice(), productInfo.getSubtotal());
         }
-        receipt += "----------------------\n";
+        receipt += HORIZONTAL;
         receipt += String.format("Total: %d (yuan)\n", total);
-        receipt += "**********************";
+        receipt +=ENDLINE;
+
         return receipt;
     }
 }
